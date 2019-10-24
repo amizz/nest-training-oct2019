@@ -1,30 +1,33 @@
-import { Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Res } from '@nestjs/common';
 import { UserService } from '../../services/user.service';
+import { Response, Request } from "express";
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private userService : UserService
-  ) {}
+  constructor(private readonly userService: UserService) {}
+
+  @Post()
+  async create(@Body() createUserDto: any) {
+    return this.userService.create(createUserDto);
+  }
 
   @Get()
-  getHello(@Req() req, @Res() res): string {
-      return res.status(200).json({status: 'ok'})
+  async getUserQuery(@Query() createUserDto: any) {
+    return this.userService.findAll();
   }
 
-  @Get('all')
-  async getAll(@Req() req, @Res() res): Promise<any> {
-      try {
-        let result = await this.userService.getUsers()
-
-        return res.status(200).json({status: 'ok', data: result})        
-      } catch (error) {
-        throw error
-      }
+  @Get(':id')
+  async getUserId(@Param() createUserDto: any) {
+    return this.userService.findAll();
   }
 
-  @Post('')
-  setHello(@Req() req, @Res() res): string {
-      return res.status(200).json({status: 'ok'})
+  @Get(':id')
+  async getUserExpress(@Res() req : Request) {
+    return this.userService.findAll();
+  }
+
+  @Get()
+  async findAll(): Promise<any[]> {
+    return this.userService.findAll();
   }
 }
